@@ -43,6 +43,7 @@ Configuration options can be set globally in `custom` property and inside each f
 #### Global
 
 * **debug** (default `false`) - When debug is set to `true` it won't remove `prefix` folder and will generate debug output at the end of package creation.
+* **enabled** (default `true`) - When enabled is set to `false` it won't optimize code.
 * **exclude** (default `['aws-sdk']`) - Array of modules or paths that will be excluded.
 * **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
 * **external** Array of modules to be copied into `node_modules` instead of being loaded into browserify bundle. Note that external modules will require that its dependencies are within its directory and this plugin *will not* do this for you. e.g. you should execute the following: (`cd external_modules/some-module && npm i --prod`)
@@ -59,6 +60,7 @@ Configuration options can be set globally in `custom` property and inside each f
 custom:
   optimize:
     debug: true
+    enabled: true
     exclude: ['ajv']
     extensions: ['.extension']
     external: ['sharp']

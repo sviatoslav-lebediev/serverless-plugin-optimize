@@ -154,33 +154,37 @@ class Optimize {
    * @return {Promise}
    * */
   beforeCreateDeploymentArtifacts () {
-    /** Log optimize start */
-    this.serverless.cli.log('Optimize: starting engines')
-
-    /** Get prefix path */
-    this.path = this.getPath(this.optimize.options.prefix)
-
-    /** Package globally or individually */
-    this.optimize.options.individually = !!(this.serverless.service.package && this.serverless.service.package.individually)
-    if (!this.optimize.options.individually) {
-      this.optimize.package = {
-        exclude: ['**'],
-        include: [this.optimize.options.prefix + '/**']
-      }
-      this.serverless.service.package = this.serverless.service.package || {}
-      Object.assign(this.serverless.service.package, this.optimize.package)
+    if (this.custom && this.custom.optimize && this.custom.optimize.enabled === false) {
+      return BbPromise.resolve('optimization skipped')
     }
 
-    /** Clean prefix folder */
-    return this.cleanFolder().then(() => {
-      /** Optimize one function */
-      if (this.options.function) {
-        return this.optimizeFunction(this.options.function)
-      } else {
-        /** Optimize all functions */
-        return this.optimizeAllFunctions()
+      /** Log optimize start */
+      this.serverless.cli.log('Optimize: starting engines')
+
+      /** Get prefix path */
+      this.path = this.getPath(this.optimize.options.prefix)
+
+      /** Package globally or individually */
+      this.optimize.options.individually = !!(this.serverless.service.package && this.serverless.service.package.individually)
+      if (!this.optimize.options.individually) {
+        this.optimize.package = {
+          exclude: ['**'],
+          include: [this.optimize.options.prefix + '/**']
+        }
+        this.serverless.service.package = this.serverless.service.package || {}
+        Object.assign(this.serverless.service.package, this.optimize.package)
       }
-    })
+
+      /** Clean prefix folder */
+      return this.cleanFolder().then(() => {
+        /** Optimize one function */
+        if (this.options.function) {
+          return this.optimizeFunction(this.options.function)
+        } else {
+          /** Optimize all functions */
+          return this.optimizeAllFunctions()
+        }
+      })
   }
 
   /**

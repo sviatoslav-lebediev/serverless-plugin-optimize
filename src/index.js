@@ -48,6 +48,8 @@ class Optimize {
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {
+      //TODO improve hardcoded node10.x version
+      const node = this.serverless.service.provider.runtime === 'nodejs10.x' ? '10.15.0' : this.serverless.service.provider.runtime.split('nodejs')[1];
       /** Optimize variables with default options */
       this.optimize = {
         functions: [],
@@ -65,7 +67,7 @@ class Optimize {
           prefix: '_optimize',
           presets: [[require.resolve('@babel/preset-env'), {
             targets: {
-              node: this.serverless.service.provider.runtime.split('nodejs')[1]
+              node
             }
           }]]
         }
